@@ -75,8 +75,8 @@ separated out into a subclass of `PreferenceDialogFragmentCompat`. The code to
 create and show this dialog fragment, by default, is expected to be in your
 preference activity or fragment.
 
-This library's `PreferenceActivityX` automatically routes dialog creation
-back to any subclass of `DialogPreferenceX`:
+This library automatically routes dialog creation back to any subclass
+of `DialogPreferenceX`:
 
 ```kotlin
 class MyPreference(context: Context, attrs: AttributeSet)
