@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PrefsXHeader">
+        <attr name="android:fragment" />
+        <attr name="android:title" />
+        <attr name="android:icon" />
+    </declare-styleable>
+
+    <declare-styleable name="PrefsXIntent">
+        <attr name="android:targetClass" />
+        <attr name="android:targetPackage" />
+    </declare-styleable>
+
+    <declare-styleable name="IntegerListPreference">
+        <attr name="valueList" format="reference" />
+        <attr name="entryTemplate" format="reference" />
+        <attr name="entryList" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="RingtonePreferenceX">
+        <attr name="android:ringtoneType" />
+        <attr name="android:showDefault" />
+        <attr name="android:showSilent" />
+    </declare-styleable>
+
+</resources>

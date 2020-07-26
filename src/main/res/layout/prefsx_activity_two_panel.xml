@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/prefsx_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/prefsx_fragment_headers"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4" />
+
+    <FrameLayout
+        android:id="@+id/prefsx_fragment_preferences"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="8" />
+
+</LinearLayout>
