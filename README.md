@@ -29,7 +29,7 @@ this is optional and can be turned off with a resource.
 
 Two panel layout on tablets.
 
-If you have custom preference that used to subclass from DialogPreference and display
+If you have a custom preference that used to subclass from DialogPreference and display
 a custom dialog, [this can be a bit annoying with Android X](https://stackoverflow.com/questions/52754655).
 An easier way is provided by this library.
 
