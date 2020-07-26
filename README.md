@@ -48,7 +48,7 @@ Just derive your preference activity from `PreferenceActivityX` and your
 preference fragment classes from `PreferenceFragmentX`. 
 
 Your activity will need to implement `onBuildHeaders` to provide the list of
-top level headers (settings section), same as it dif with `android.preference`
+top level headers (settings section), same as it did with `android.preference`
 
 It's easiest use `loadHeadersFromResource`.  If you are converting
 from `PreferenceActivity`, your existing `xml` should work. 
