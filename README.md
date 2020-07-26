@@ -1,4 +1,4 @@
-#prefsx - a PreferenceActivity for AndroidX
+# prefsx - a PreferenceActivity for AndroidX
 
 Since API 29, the "good old" PreferenceActivity is deprecated and you will get
 a lot of warnings trying to use any classes in `android.preference`.
@@ -104,12 +104,12 @@ for example the app's theme.
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-		<org.kman.prefsx.IntegerListPreference
-			android:defaultValue="0"
-			android:key="theme"
-			android:title="@string/theme"
-			app:entryList="@array/theme_entry_list"
-			app:valueList="@array/theme_value_list" />
+	<org.kman.prefsx.IntegerListPreference
+		android:defaultValue="0"
+		android:key="theme"
+		android:title="@string/theme"
+		app:entryList="@array/theme_entry_list"
+		app:valueList="@array/theme_value_list" />
 </PreferenceScreen>
 ```
 
