@@ -50,13 +50,13 @@ preference fragment classes from `PreferenceFragmentX`.
 Your activity will need to implement `onBuildHeaders` to provide the list of
 top level headers (settings section), same as it did with `android.preference`
 
-It's easiest use `loadHeadersFromResource`.  If you are converting
+It's easiest to use `loadHeadersFromResource`.  If you are converting
 from `PreferenceActivity`, your existing `xml` should work. 
 
 ## Collapse large padding reserved for icons
 
-The library, by default, will collapse the large padding on the left of each
-preference or preference category (reserved by Google for icons).
+The library, by default, will collapse the large padding on the left of each preference
+or preference category (reserved by Google for icons even if you don't use them).
 
 If you need to turn this off and keep the padding, please add this as a
 resource to your application:
