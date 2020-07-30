@@ -2,6 +2,7 @@ package org.kman.prefsx
 
 import android.content.Intent
 import android.content.res.XmlResourceParser
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcel
@@ -15,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.Preference
@@ -66,11 +68,15 @@ abstract class PreferenceActivityX
 		mShowFragmentArguments = intent.getBundleExtra(EXTRA_SHOW_FRAGMENT_ARGUMENTS)
 
 		if (savedInstanceState != null) {
+			mIsLargeHeaderIcons = savedInstanceState.getBoolean(KEY_LARGE_HEADER_ICONS)
 			title = savedInstanceState.getCharSequence(KEY_TITLE, mDefaultTitle)
 
 			val targetList = savedInstanceState.getParcelableArrayList<Header>(KEY_HEADERS)
 			if (targetList != null) {
 				mTargetList.addAll(targetList)
+
+				rebuildLargeHeaderIcons()
+
 				mHeaderListAdapter.setHeaderList(mTargetList)
 			}
 
@@ -125,6 +131,8 @@ abstract class PreferenceActivityX
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
 
+		outState.putBoolean(KEY_LARGE_HEADER_ICONS, mIsLargeHeaderIcons)
+
 		val fm = supportFragmentManager
 		val prefsFragment = fm.findFragmentById(R.id.prefsx_fragment_preferences)
 		if (prefsFragment != null) {
@@ -155,12 +163,21 @@ abstract class PreferenceActivityX
 		return false
 	}
 
+	fun setUseLargeHeaderIcons(large: Boolean) {
+		mIsLargeHeaderIcons = large
+	}
+
+	open fun getLargeHeaderIcon(iconRes: Int): Drawable? {
+		return ContextCompat.getDrawable(this, iconRes)
+	}
+
 	class Header() : Parcelable {
 		var title: String? = null
 		var iconRes: Int = 0
 		var fragment: String? = null
 		var fragmentArguments: Bundle? = null
 		var intent: Intent? = null
+		var largeIcon: Drawable? = null
 
 		constructor(parcel: Parcel) : this() {
 			title = parcel.readString()
@@ -223,6 +240,8 @@ abstract class PreferenceActivityX
 		mTargetList.clear()
 		mTargetList.addAll(target)
 
+		rebuildLargeHeaderIcons()
+
 		mHeaderListAdapter.setHeaderList(mTargetList)
 
 		oldActivated?.fragment?.also {
@@ -240,6 +259,16 @@ abstract class PreferenceActivityX
 			val header = onGetNewHeader()
 			if (header != null) {
 				switchToFragment(header)
+			}
+		}
+	}
+
+	private fun rebuildLargeHeaderIcons() {
+		if (mIsLargeHeaderIcons) {
+			for (header in mTargetList) {
+				if (header.iconRes != 0) {
+					header.largeIcon = getLargeHeaderIcon(header.iconRes)
+				}
 			}
 		}
 	}
@@ -416,7 +445,10 @@ abstract class PreferenceActivityX
 		}
 
 		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
-			val view = inflater.inflate(R.layout.prefsx_header, parent, false)
+			val layoutId =
+					if (activity.mIsLargeHeaderIcons) R.layout.prefsx_header_large_icon
+					else R.layout.prefsx_header
+			val view = inflater.inflate(layoutId, parent, false)
 			return HeaderViewHolder(view).apply {
 				view.setOnClickListener(this@HeaderListAdapter::onHeaderClick)
 			}
@@ -425,7 +457,11 @@ abstract class PreferenceActivityX
 		override fun onBindViewHolder(holder: HeaderViewHolder, position: Int) {
 			val item = list.get(position)
 			if (item.iconRes != 0) {
-				holder.image.setImageResource(item.iconRes)
+				if (activity.mIsLargeHeaderIcons) {
+					holder.image.setImageDrawable(item.largeIcon)
+				} else {
+					holder.image.setImageResource(item.iconRes)
+				}
 				holder.image.visibility = View.VISIBLE
 				holder.image.contentDescription = item.title
 			} else {
@@ -453,6 +489,7 @@ abstract class PreferenceActivityX
 
 		private const val DIALOG_FRAGMENT_TAG = "_dialog_fragment"
 
+		private const val KEY_LARGE_HEADER_ICONS = "large_header_icons"
 		private const val KEY_TITLE = "title"
 		private const val KEY_HEADERS = "headers"
 		private const val KEY_CURRENT_FRAGMENT = "current_fragment"
@@ -472,6 +509,8 @@ abstract class PreferenceActivityX
 
 	private val mHandler = Handler()
 	private lateinit var mRebuildHeaders: () -> Unit
+
+	private var mIsLargeHeaderIcons = false
 
 	private lateinit var mContentView: ViewGroup
 	private lateinit var mHeaderListView: RecyclerView

@@ -4,5 +4,6 @@
     <bool name="prefsx_collapse_icon_space_reserved">true</bool>
 
     <dimen name="prefsx_use_two_panel_layout">720dp</dimen>
+    <dimen name="prefsx_large_header_drawable_size">40dp</dimen>
 
 </resources>
