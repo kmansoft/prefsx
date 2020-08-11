@@ -53,6 +53,8 @@ class IntegerListPreference(context: Context, attrs: AttributeSet)
 			persistInt(value)
 			updateSummary()
 			notifyChanged()
+
+			mChangedListener?.onChanged(value)
 		}
 	}
 
