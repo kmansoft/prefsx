@@ -58,7 +58,9 @@ abstract class PreferenceActivityX
 		mHeaderListAdapter = HeaderListAdapter(layoutInflater, this)
 
 		mHeaderListView.apply {
-			itemAnimator = DefaultItemAnimator()
+			itemAnimator = DefaultItemAnimator().apply {
+				supportsChangeAnimations = false
+			}
 			layoutManager = LinearLayoutManager(this@PreferenceActivityX)
 			adapter = mHeaderListAdapter
 		}
