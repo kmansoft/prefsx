@@ -381,6 +381,12 @@ abstract class PreferenceActivityX
 
 			if (mIsOnMultiPane) {
 				mHeaderListAdapter.setActivatedItem(header)
+				for (i in mTargetList.indices) {
+					if (mTargetList.get(i) == header) {
+						mHeaderListView.smoothScrollToPosition(i)
+						break
+					}
+				}
 			} else {
 				TransitionManager.beginDelayedTransition(mContentView)
 				mHeaderListView.visibility = View.GONE
