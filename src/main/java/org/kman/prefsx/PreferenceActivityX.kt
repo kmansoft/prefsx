@@ -229,6 +229,9 @@ abstract class PreferenceActivityX
 
 	abstract fun onBuildHeaders(target: MutableList<Header>)
 
+	open fun onCreatedHeaderViewHolder(view: View) {
+	}
+
 	open fun onGetNewHeader(): Header? {
 		return mTargetList.firstOrNull()
 	}
@@ -451,6 +454,7 @@ abstract class PreferenceActivityX
 					if (activity.mIsLargeHeaderIcons) R.layout.prefsx_header_large_icon
 					else R.layout.prefsx_header
 			val view = inflater.inflate(layoutId, parent, false)
+			activity.onCreatedHeaderViewHolder(view)
 			return HeaderViewHolder(view).apply {
 				view.setOnClickListener(this@HeaderListAdapter::onHeaderClick)
 			}
