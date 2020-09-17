@@ -116,10 +116,12 @@ abstract class PreferenceActivityX
 			if (mShowFragment != null) {
 				finish()
 			} else {
-				TransitionManager.beginDelayedTransition(mContentView)
 				if (mIsOnMultiPane) {
 					mHeaderListAdapter.setActivatedItem(null)
 				} else {
+					mHeaderListView.alpha = 0.1f
+					mHeaderListView.animate().alpha(1.0f).setDuration(350).start()
+
 					mHeaderListView.visibility = View.VISIBLE
 					title = mDefaultTitle
 				}
