@@ -58,7 +58,9 @@ abstract class PreferenceActivityX
 
 		mContentView = findViewById(R.id.prefsx_content)
 		mHeaderListView = findViewById(R.id.prefsx_fragment_headers)
-		mHeaderListAdapter = HeaderListAdapter(layoutInflater, this)
+		mHeaderListAdapter = HeaderListAdapter(layoutInflater, this).apply {
+			setHasStableIds(mIsStableHeaderIds)
+		}
 
 		mHeaderListView.apply {
 			itemAnimator = DefaultItemAnimator().apply {
@@ -237,6 +239,10 @@ abstract class PreferenceActivityX
 
 	fun setHideItemId(itemId: Long) {
 		mHeaderListView.setHideItemId(itemId)
+	}
+
+	fun setHasStableHeaderIds(stable: Boolean) {
+		mIsStableHeaderIds = stable
 	}
 
 	abstract fun onBuildHeaders(target: MutableList<Header>)
@@ -576,6 +582,7 @@ abstract class PreferenceActivityX
 	private val mHandler = Handler()
 	private lateinit var mRebuildHeaders: () -> Unit
 
+	private var mIsStableHeaderIds = false
 	private var mIsLargeHeaderIcons = false
 
 	private lateinit var mContentView: ViewGroup
