@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <view
+        class="org.kman.prefsx.PreferenceActivityX$HeaderListView"
         android:id="@+id/prefsx_fragment_headers"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

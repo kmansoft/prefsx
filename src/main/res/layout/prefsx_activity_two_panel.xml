@@ -5,8 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <view
         android:id="@+id/prefsx_fragment_headers"
+        class="org.kman.prefsx.PreferenceActivityX$HeaderListView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4" />

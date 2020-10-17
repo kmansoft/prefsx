@@ -1,13 +1,16 @@
 package org.kman.prefsx
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.XmlResourceParser
+import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcel
 import android.os.Parcelable
 import android.transition.TransitionManager
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -158,8 +161,8 @@ abstract class PreferenceActivityX
 		if (preference is DialogPreferenceX) {
 			val dialogFragment = preference.createDialogFragment()
 			if (dialogFragment != null) {
-				dialogFragment.setTargetFragment(fragment, 0);
-				dialogFragment.show(parent, DIALOG_FRAGMENT_TAG);
+				dialogFragment.setTargetFragment(fragment, 0)
+				dialogFragment.show(parent, DIALOG_FRAGMENT_TAG)
 				return true
 			}
 		}
@@ -182,6 +185,7 @@ abstract class PreferenceActivityX
 		var fragmentArguments: Bundle? = null
 		var intent: Intent? = null
 		var largeIcon: Drawable? = null
+		var itemId: Long = -1L
 
 		constructor(parcel: Parcel) : this() {
 			title = parcel.readString()
@@ -189,6 +193,7 @@ abstract class PreferenceActivityX
 			fragment = parcel.readString()
 			fragmentArguments = parcel.readBundle(Bundle::class.java.classLoader)
 			intent = parcel.readParcelable(Intent::class.java.classLoader)
+			itemId = parcel.readLong()
 		}
 
 		override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -197,6 +202,7 @@ abstract class PreferenceActivityX
 			parcel.writeString(fragment)
 			parcel.writeBundle(fragmentArguments)
 			parcel.writeParcelable(intent, flags)
+			parcel.writeLong(itemId)
 		}
 
 		override fun describeContents(): Int {
@@ -229,6 +235,10 @@ abstract class PreferenceActivityX
 		}
 	}
 
+	fun setHideItemId(itemId: Long) {
+		mHeaderListView.setHideItemId(itemId)
+	}
+
 	abstract fun onBuildHeaders(target: MutableList<Header>)
 
 	open fun onCreatedHeaderViewHolder(view: View) {
@@ -236,6 +246,9 @@ abstract class PreferenceActivityX
 
 	open fun onGetNewHeader(): Header? {
 		return mTargetList.firstOrNull()
+	}
+
+	open fun onBoundHeaderView(view: View, header: Header) {
 	}
 
 	private fun rebuildHeaders() {
@@ -422,6 +435,8 @@ abstract class PreferenceActivityX
 
 	private class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 		val image: ImageView = view.findViewById(R.id.prefs_header_image)
+
+		// val icon: ImageView = view.findViewById(R.id.prefs_header_icon)
 		val title: TextView = view.findViewById(R.id.prefs_header_title)
 	}
 
@@ -457,6 +472,10 @@ abstract class PreferenceActivityX
 			return list.size
 		}
 
+		override fun getItemId(position: Int): Long {
+			return list.get(position).itemId
+		}
+
 		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
 			val layoutId =
 					if (activity.mIsLargeHeaderIcons) R.layout.prefsx_header_large_icon
@@ -485,12 +504,45 @@ abstract class PreferenceActivityX
 			holder.title.text = item.title
 			holder.itemView.isActivated = item == activated
 			holder.itemView.tag = item
+
+			activity.onBoundHeaderView(holder.itemView, item)
 		}
 
 		private fun onHeaderClick(view: View) {
 			val item = view.tag as Header
 			activity.onHeaderClick(item)
 		}
+	}
+
+	class HeaderListView(context: Context, attrs: AttributeSet)
+		: RecyclerView(context, attrs) {
+
+		fun setHideItemId(id: Long) {
+			if (mHideItemId != id) {
+				mHideItemId = id
+				invalidate()
+			}
+		}
+
+		override fun drawChild(canvas: Canvas, child: View, drawingTime: Long): Boolean {
+			if (mHideItemId != NO_ID) {
+				val holder = getChildViewHolder(child)
+				if (holder != null) {
+					val adapter = adapter
+					val adapterPosition = holder.adapterPosition
+					if (adapter != null && adapterPosition != NO_POSITION) {
+						if (mHideItemId == adapter.getItemId(adapterPosition)) {
+							return true
+						}
+					}
+				}
+			}
+
+			return super.drawChild(canvas, child, drawingTime)
+		}
+
+		private var mHideItemId = NO_ID
+
 	}
 
 	companion object {
@@ -527,6 +579,6 @@ abstract class PreferenceActivityX
 	private var mIsLargeHeaderIcons = false
 
 	private lateinit var mContentView: ViewGroup
-	private lateinit var mHeaderListView: RecyclerView
+	private lateinit var mHeaderListView: HeaderListView
 	private lateinit var mHeaderListAdapter: HeaderListAdapter
 }
