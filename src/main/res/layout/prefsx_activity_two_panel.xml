@@ -3,14 +3,21 @@
     android:id="@+id/prefsx_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:baselineAligned="false">
 
-    <view
-        android:id="@+id/prefsx_fragment_headers"
-        class="org.kman.prefsx.PreferenceActivityX$HeaderListView"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4" />
+        android:layout_weight="4">
+
+        <view
+            android:id="@+id/prefsx_fragment_headers"
+            class="org.kman.prefsx.PreferenceActivityX$HeaderListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/prefsx_fragment_preferences"
