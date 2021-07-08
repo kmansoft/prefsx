@@ -14,6 +14,7 @@ class IntegerListPreference(context: Context, attrs: AttributeSet)
 	private var mValue = -1
 	private var mValueSet = false
 	private var mChangedListener: ChangedListener? = null
+	private var mDisableDependentsValue = -1
 
 	interface ChangedListener {
 		fun onChanged(newValue: Int)
@@ -32,7 +33,14 @@ class IntegerListPreference(context: Context, attrs: AttributeSet)
 					res.getString(entryTemplateId, mValueList[it])
 				} else a.getTextArray(R.styleable.IntegerListPreference_entryList)
 
+		mDisableDependentsValue = a.getInt(R.styleable.IntegerListPreference_disableDependentsValue, -1)
+
 		a.recycle()
+	}
+
+	override fun shouldDisableDependents(): Boolean {
+		return super.shouldDisableDependents() ||
+				mValueSet && mValue == mDisableDependentsValue
 	}
 
 	fun setValueAndEntryList(valueList: IntArray, entryList: Array<CharSequence>) {
@@ -53,6 +61,7 @@ class IntegerListPreference(context: Context, attrs: AttributeSet)
 			persistInt(value)
 			updateSummary()
 			notifyChanged()
+			notifyDependencyChange(shouldDisableDependents())
 
 			mChangedListener?.onChanged(value)
 		}

@@ -16,6 +16,7 @@
         <attr name="valueList" format="reference" />
         <attr name="entryTemplate" format="reference" />
         <attr name="entryList" format="reference" />
+        <attr name="disableDependentsValue" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="RingtonePreferenceX">
