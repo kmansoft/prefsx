@@ -6,6 +6,8 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.*
 
 abstract class PreferenceFragmentX : PreferenceFragmentCompat() {
@@ -55,7 +57,7 @@ abstract class PreferenceFragmentX : PreferenceFragmentCompat() {
 			val key = preference.key
 			if (key != null) {
 				mRingtonePickKey = key
-				preference.onPreferenceClick(this, REQ_CODE_RINGTONE)
+				preference.onPreferenceClick(this, mRequestRingtone)
 				return true
 			}
 		}
@@ -71,32 +73,27 @@ abstract class PreferenceFragmentX : PreferenceFragmentCompat() {
 			outState.putString(SAVE_STATE_RINGTONE_PICK_KEY, key)
 		}
 	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		if (requestCode == REQ_CODE_RINGTONE) {
-			if (resultCode == Activity.RESULT_OK && data != null) {
-				val key = mRingtonePickKey
-				if (key != null) {
-					val pref = findPreference<Preference>(key)
-					if (pref is RingtonePreferenceX) {
-						val uri: Uri? = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
-						pref.onActivityResult(uri)
-					}
+	private fun onResultRingtone(res: ActivityResult) {
+		if (res.resultCode == Activity.RESULT_OK) {
+			val key = mRingtonePickKey
+			if (key != null) {
+				val pref = findPreference<Preference>(key)
+				val uri: Uri? = res.data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+				if (pref is RingtonePreferenceX) {
+					pref.onActivityResult(uri)
 				}
 			}
-
-			return
 		}
-
-		super.onActivityResult(requestCode, resultCode, data)
 	}
 
 	companion object {
-		private const val REQ_CODE_RINGTONE = 1
-
 		private const val SAVE_STATE_RINGTONE_PICK_KEY = "ringtone_pick_key"
 	}
 
 	private var mRingtonePickKey: String? = null
 	private var mCollapseIconSpaceReserved = true
+
+	private val mRequestRingtone = registerForActivityResult(
+		ActivityResultContracts.StartActivityForResult(),
+		this::onResultRingtone)
 }
