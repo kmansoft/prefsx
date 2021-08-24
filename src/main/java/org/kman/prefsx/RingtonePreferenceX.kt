@@ -77,7 +77,7 @@ class RingtonePreferenceX(context: Context, attrs: AttributeSet)
 						if (defaultValue is String) defaultValue else null))
 	}
 
-	internal fun onPreferenceClick(fragment: Fragment, request: ActivityResultLauncher<Intent>) {
+	internal fun onPreferenceClick(request: ActivityResultLauncher<Intent>) {
 		// Launch the ringtone picker
 		val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
 		onPrepareRingtonePickerIntent(intent)

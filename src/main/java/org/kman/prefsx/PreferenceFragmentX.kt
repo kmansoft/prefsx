@@ -57,7 +57,7 @@ abstract class PreferenceFragmentX : PreferenceFragmentCompat() {
 			val key = preference.key
 			if (key != null) {
 				mRingtonePickKey = key
-				preference.onPreferenceClick(this, mRequestRingtone)
+				preference.onPreferenceClick(mRequestRingtone)
 				return true
 			}
 		}
