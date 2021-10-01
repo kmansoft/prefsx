@@ -7,6 +7,7 @@ import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.net.Uri
 import android.util.AttributeSet
+import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 
@@ -76,12 +77,12 @@ class RingtonePreferenceX(context: Context, attrs: AttributeSet)
 						if (defaultValue is String) defaultValue else null))
 	}
 
-	internal fun onPreferenceClick(fragment: Fragment, requestCode: Int) {
+	internal fun onPreferenceClick(request: ActivityResultLauncher<Intent>) {
 		// Launch the ringtone picker
 		val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
 		onPrepareRingtonePickerIntent(intent)
 
-		fragment.startActivityForResult(intent, requestCode)
+		request.launch(intent)
 	}
 
 	internal fun onActivityResult(uri: Uri?) {

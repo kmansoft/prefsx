@@ -1,5 +1,6 @@
 package org.kman.prefsx
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.XmlResourceParser
@@ -160,6 +161,10 @@ abstract class PreferenceActivityX
 		if (preference is DialogPreferenceX) {
 			val dialogFragment = preference.createDialogFragment()
 			if (dialogFragment != null) {
+				// PreferenceDialogFragmentCompat still uses getTargetFragment
+				// to find the original preference, guess they don't like
+				// eating their own dog food :)
+				@Suppress("DEPRECATION")
 				dialogFragment.setTargetFragment(fragment, 0)
 				dialogFragment.show(parent, DIALOG_FRAGMENT_TAG)
 				return true
@@ -449,6 +454,7 @@ abstract class PreferenceActivityX
 		val list = ArrayList<Header>()
 		var activated: Header? = null
 
+		@SuppressLint("NotifyDataSetChanged")
 		fun setHeaderList(target: List<Header>) {
 			list.clear()
 			list.addAll(target)
