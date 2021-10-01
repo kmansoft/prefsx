@@ -5,10 +5,7 @@ import android.content.Intent
 import android.content.res.XmlResourceParser
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.os.Handler
-import android.os.Parcel
-import android.os.Parcelable
+import android.os.*
 import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -579,7 +576,7 @@ abstract class PreferenceActivityX
 
 	private val mTargetList = ArrayList<Header>()
 
-	private val mHandler = Handler()
+	private val mHandler = Handler(Looper.getMainLooper())
 	private lateinit var mRebuildHeaders: () -> Unit
 
 	private var mIsStableHeaderIds = false
