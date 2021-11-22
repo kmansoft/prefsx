@@ -378,7 +378,7 @@ abstract class PreferenceActivityX
 		val args = header.fragmentArguments
 		if (fragment != null) {
 			if (mCurrentFragment == fragment &&
-					mCurrentFragmentArguments == args) {
+					isBundleEquals(mCurrentFragmentArguments, args)) {
 				return
 			}
 
@@ -416,6 +416,31 @@ abstract class PreferenceActivityX
 				title = header.title
 			}
 		}
+	}
+
+	private fun isBundleEquals(a: Bundle?, b: Bundle?): Boolean {
+		if (a == null && b == null) {
+			return true
+		}
+		if (a == null || b == null) {
+			return false
+		}
+
+		val akeys = a.keySet()
+		val bkeys = b.keySet()
+		if (akeys != bkeys) {
+			return false
+		}
+
+		for (ak in akeys) {
+			val aval = a.get(ak)
+			val bval = b.get(ak)
+			if (aval != bval) {
+				return false
+			}
+		}
+
+		return true
 	}
 
 	private fun findFragmentHeader(fragment: String, fragmentArguments: Bundle?): Header? {
