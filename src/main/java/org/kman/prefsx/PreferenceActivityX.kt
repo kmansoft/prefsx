@@ -259,6 +259,10 @@ abstract class PreferenceActivityX
 	open fun onBoundHeaderView(view: View, header: Header) {
 	}
 
+	open fun validateSwitchToHeader(f: String, args: Bundle?): Header? {
+		return null
+	}
+
 	private fun rebuildHeaders() {
 		val oldActivated = mHeaderListAdapter.getActivatedItem()
 
@@ -279,7 +283,10 @@ abstract class PreferenceActivityX
 
 		val showFragment = mShowFragment
 		if (showFragment != null) {
-			val header = findFragmentHeader(showFragment, mShowFragmentArguments)
+			var header = findFragmentHeader(showFragment, mShowFragmentArguments)
+			if (header == null) {
+				header = validateSwitchToHeader(showFragment, mShowFragmentArguments)
+			}
 			if (header != null) {
 				switchToFragment(header)
 			}
@@ -377,30 +384,28 @@ abstract class PreferenceActivityX
 		val fragment = header.fragment
 		val args = header.fragmentArguments
 		if (fragment != null) {
-			if (mCurrentFragment == fragment &&
+			if (mCurrentFragment != fragment ||
 					isBundleEquals(mCurrentFragmentArguments, args)) {
-				return
-			}
+				val fm = supportFragmentManager
+				fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
-			val fm = supportFragmentManager
-			fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+				mCurrentFragment = fragment
+				mCurrentFragmentArguments = args
 
-			mCurrentFragment = fragment
-			mCurrentFragmentArguments = args
-
-			val factory = fm.fragmentFactory
-			val prefsFragment = factory.instantiate(classLoader, fragment)
-			if (args != null) {
-				prefsFragment.arguments = args
-			}
-
-			fm.beginTransaction().apply {
-				setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-				if (!mIsOnMultiPane) {
-					addToBackStack(null)
+				val factory = fm.fragmentFactory
+				val prefsFragment = factory.instantiate(classLoader, fragment)
+				if (args != null) {
+					prefsFragment.arguments = args
 				}
-				replace(R.id.prefsx_fragment_preferences, prefsFragment)
-			}.commitAllowingStateLoss()
+
+				fm.beginTransaction().apply {
+					setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+					if (!mIsOnMultiPane) {
+						addToBackStack(null)
+					}
+					replace(R.id.prefsx_fragment_preferences, prefsFragment)
+				}.commitAllowingStateLoss()
+			}
 
 			if (mIsOnMultiPane) {
 				mHeaderListAdapter.setActivatedItem(header)
@@ -458,7 +463,7 @@ abstract class PreferenceActivityX
 			return matches.first()
 		}
 		for (item in matches) {
-			if (item.fragmentArguments == fragmentArguments) {
+			if (isBundleEquals(item.fragmentArguments, fragmentArguments)) {
 				return item
 			}
 		}
