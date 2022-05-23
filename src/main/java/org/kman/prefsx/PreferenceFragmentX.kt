@@ -39,9 +39,12 @@ abstract class PreferenceFragmentX : PreferenceFragmentCompat() {
 				val count = group.preferenceCount
 				for (i in 0 until count) {
 					val pref = group.getPreference(i)
-					pref?.isIconSpaceReserved = false
-					if (pref is PreferenceCategory) {
-						queue.add(pref)
+					@Suppress("SENSELESS_COMPARISON")
+					if (pref != null){
+						pref.isIconSpaceReserved = false
+						if (pref is PreferenceCategory) {
+							queue.add(pref)
+						}
 					}
 				}
 			}
@@ -52,7 +55,7 @@ abstract class PreferenceFragmentX : PreferenceFragmentCompat() {
 		mCollapseIconSpaceReserved = collapse
 	}
 
-	override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+	override fun onPreferenceTreeClick(preference: Preference): Boolean {
 		if (preference is RingtonePreferenceX) {
 			val key = preference.key
 			if (key != null) {

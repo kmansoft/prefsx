@@ -152,7 +152,7 @@ abstract class PreferenceActivityX
 	}
 
 	override fun onPreferenceDisplayDialog(fragment: PreferenceFragmentCompat,
-										   preference: Preference?): Boolean {
+										   preference: Preference): Boolean {
 		val parent = fragment.parentFragmentManager
 		if (parent.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) {
 			return true

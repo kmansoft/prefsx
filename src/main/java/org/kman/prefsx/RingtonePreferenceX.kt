@@ -111,7 +111,7 @@ class RingtonePreferenceX(context: Context, attrs: AttributeSet)
 	}
 
 	private fun updateSummary() {
-		val context = context ?: return
+		val context = context
 		val value = mValue
 		if (value == null) {
 			summary = context.getString(R.string.prefsx_notify_sound_none)

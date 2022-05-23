@@ -44,7 +44,7 @@ class TimePreference(context: Context, attrs: AttributeSet)
 	}
 
 	private fun updateSummary() {
-		val context = context ?: return
+		val context = context
 		summary = if (mValue == -1) {
 			null
 		} else {
