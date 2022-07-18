@@ -45,6 +45,7 @@ class LargeHeaderDrawable(context: Context,
 		// Nothing
 	}
 
+	@Deprecated("Deprecated in Java")
 	override fun getOpacity(): Int {
 		return PixelFormat.TRANSLUCENT
 	}
