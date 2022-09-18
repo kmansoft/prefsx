@@ -76,6 +76,7 @@ abstract class PreferenceActivityX
 			mIsLargeHeaderIcons = savedInstanceState.getBoolean(KEY_LARGE_HEADER_ICONS)
 			title = savedInstanceState.getCharSequence(KEY_TITLE, mDefaultTitle)
 
+			@Suppress("DEPRECATION")
 			val targetList = savedInstanceState.getParcelableArrayList<Header>(KEY_HEADERS)
 			if (targetList != null) {
 				mTargetList.addAll(targetList)
@@ -86,6 +87,7 @@ abstract class PreferenceActivityX
 			}
 
 			mCurrentFragment = savedInstanceState.getString(KEY_CURRENT_FRAGMENT)
+			@Suppress("DEPRECATION")
 			mCurrentFragmentArguments = savedInstanceState.getParcelable(KEY_CURRENT_FRAGMENT_ARGUMENTS)
 
 			val currentFragment = mCurrentFragment
@@ -196,6 +198,7 @@ abstract class PreferenceActivityX
 			iconRes = parcel.readInt()
 			fragment = parcel.readString()
 			fragmentArguments = parcel.readBundle(Bundle::class.java.classLoader)
+			@Suppress("DEPRECATION")
 			intent = parcel.readParcelable(Intent::class.java.classLoader)
 			itemId = parcel.readLong()
 		}
@@ -423,6 +426,7 @@ abstract class PreferenceActivityX
 		}
 	}
 
+	@Suppress("DEPRECATION")
 	private fun isBundleEquals(a: Bundle?, b: Bundle?): Boolean {
 		if (a == null && b == null) {
 			return true

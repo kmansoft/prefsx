@@ -2,7 +2,6 @@ package org.kman.prefsx
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
@@ -76,12 +75,14 @@ abstract class PreferenceFragmentX : PreferenceFragmentCompat() {
 			outState.putString(SAVE_STATE_RINGTONE_PICK_KEY, key)
 		}
 	}
+
+	@Suppress("DEPRECATION")
 	private fun onResultRingtone(res: ActivityResult) {
 		if (res.resultCode == Activity.RESULT_OK) {
 			val key = mRingtonePickKey
 			if (key != null) {
 				val pref = findPreference<Preference>(key)
-				val uri: Uri? = res.data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+				val uri = res.data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
 				if (pref is RingtonePreferenceX) {
 					pref.onActivityResult(uri)
 				}
