@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
@@ -102,39 +103,16 @@ abstract class PreferenceActivityX
 		} else {
 			mHandler.post(mRebuildHeaders)
 		}
+
+		onBackPressedDispatcher.addCallback(this, mOnBackPressed)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
-			android.R.id.home -> onBackPressed()
+			android.R.id.home -> onBackPressedImpl()
 			else -> return super.onOptionsItemSelected(item)
 		}
 		return true
-	}
-
-	override fun onBackPressed() {
-		val fm = supportFragmentManager
-
-		super.onBackPressed()
-
-		if (!isFinishing && fm.backStackEntryCount == 0) {
-			if (mShowFragment != null) {
-				finish()
-			} else {
-				if (mIsOnMultiPane) {
-					mHeaderListAdapter.setActivatedItem(null)
-				} else {
-					mHeaderListView.alpha = 0.1f
-					mHeaderListView.animate().alpha(1.0f).setDuration(350).start()
-
-					mHeaderListView.visibility = View.VISIBLE
-					title = mDefaultTitle
-				}
-
-				mCurrentFragment = null
-				mCurrentFragmentArguments = null
-			}
-		}
 	}
 
 	override fun onSaveInstanceState(outState: Bundle) {
@@ -264,6 +242,34 @@ abstract class PreferenceActivityX
 
 	open fun validateSwitchToHeader(f: String, args: Bundle?): Header? {
 		return null
+	}
+
+	private fun onBackPressedImpl() {
+		val fm = supportFragmentManager
+		if (fm.backStackEntryCount > 0) {
+			fm.popBackStackImmediate();
+		} else {
+			finish();
+		}
+
+		if (!isFinishing && fm.backStackEntryCount == 0) {
+			if (mShowFragment != null) {
+				finish()
+			} else {
+				if (mIsOnMultiPane) {
+					mHeaderListAdapter.setActivatedItem(null)
+				} else {
+					mHeaderListView.alpha = 0.1f
+					mHeaderListView.animate().alpha(1.0f).setDuration(350).start()
+
+					mHeaderListView.visibility = View.VISIBLE
+					title = mDefaultTitle
+				}
+
+				mCurrentFragment = null
+				mCurrentFragmentArguments = null
+			}
+		}
 	}
 
 	private fun rebuildHeaders() {
@@ -621,6 +627,12 @@ abstract class PreferenceActivityX
 
 	private var mIsStableHeaderIds = false
 	private var mIsLargeHeaderIcons = false
+
+	private val mOnBackPressed = object : OnBackPressedCallback(true) {
+		override fun handleOnBackPressed() {
+			this@PreferenceActivityX.onBackPressedImpl()
+		}
+	}
 
 	private lateinit var mContentView: ViewGroup
 	private lateinit var mHeaderListView: HeaderListView
