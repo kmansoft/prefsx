@@ -247,9 +247,9 @@ abstract class PreferenceActivityX
 	private fun onBackPressedImpl() {
 		val fm = supportFragmentManager
 		if (fm.backStackEntryCount > 0) {
-			fm.popBackStackImmediate();
+			fm.popBackStackImmediate()
 		} else {
-			finish();
+			finish()
 		}
 
 		if (!isFinishing && fm.backStackEntryCount == 0) {
@@ -578,7 +578,7 @@ abstract class PreferenceActivityX
 				val holder = getChildViewHolder(child)
 				if (holder != null) {
 					val adapter = adapter
-					val adapterPosition = holder.adapterPosition
+					val adapterPosition = holder.bindingAdapterPosition
 					if (adapter != null && adapterPosition != NO_POSITION) {
 						if (mHideItemId == adapter.getItemId(adapterPosition)) {
 							return true
