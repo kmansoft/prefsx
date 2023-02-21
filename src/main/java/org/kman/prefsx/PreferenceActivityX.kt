@@ -578,9 +578,9 @@ abstract class PreferenceActivityX
 				val holder = getChildViewHolder(child)
 				if (holder != null) {
 					val adapter = adapter
-					val adapterPosition = holder.bindingAdapterPosition
-					if (adapter != null && adapterPosition != NO_POSITION) {
-						if (mHideItemId == adapter.getItemId(adapterPosition)) {
+					val position = holder.bindingAdapterPosition
+					if (adapter != null && position != NO_POSITION) {
+						if (mHideItemId == adapter.getItemId(position)) {
 							return true
 						}
 					}
