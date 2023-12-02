@@ -24,7 +24,7 @@ class TimePreference(context: Context, attrs: AttributeSet)
 						if (defaultValue is Int) defaultValue else 0))
 	}
 
-	override fun createDialogFragment(): DialogFragment? {
+	override fun createDialogFragment(): DialogFragment {
 		return TimePreferenceDialog.newInstance(key)
 	}
 

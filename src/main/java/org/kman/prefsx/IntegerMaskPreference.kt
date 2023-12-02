@@ -25,11 +25,11 @@ class IntegerMaskPreference(context: Context, attrs: AttributeSet)
 		return mValue
 	}
 
-	fun getEntries(): Array<CharSequence>? {
+	fun getEntries(): Array<CharSequence> {
 		return mEntryList
 	}
 
-	fun getEntryValues(): IntArray? {
+	fun getEntryValues(): IntArray {
 		return mValueList
 	}
 
@@ -43,7 +43,7 @@ class IntegerMaskPreference(context: Context, attrs: AttributeSet)
 		}
 	}
 
-	override fun onGetDefaultValue(a: TypedArray, index: Int): Any? {
+	override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
 		return a.getInt(index, 0)
 	}
 
@@ -53,7 +53,7 @@ class IntegerMaskPreference(context: Context, attrs: AttributeSet)
 						if (defaultValue is Int) defaultValue else 0))
 	}
 
-	override fun createDialogFragment(): DialogFragment? {
+	override fun createDialogFragment(): DialogFragment {
 		return IntegerMaskPreferenceDialog.newInstance(key)
 	}
 

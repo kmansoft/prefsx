@@ -28,8 +28,8 @@ class RingtonePreferenceX(context: Context, attrs: AttributeSet)
 		mShowDefault = a.getBoolean(R.styleable.RingtonePreferenceX_android_showDefault, true)
 		mShowSilent = a.getBoolean(R.styleable.RingtonePreferenceX_android_showSilent, true)
 
-		a.recycle();
-	}
+		a.recycle()
+    }
 
 	fun getRingtoneType(): Int {
 		return mRingtoneType

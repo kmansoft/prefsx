@@ -17,10 +17,9 @@ abstract class DialogPreferenceX(
 		context: Context,
 		attrs: AttributeSet?,
 		defStyleAttr: Int
-	) : this(context, attrs, defStyleAttr, 0) {
-	}
+	) : this(context, attrs, defStyleAttr, 0)
 
-	constructor(
+    constructor(
 		context: Context,
 		attrs: AttributeSet?
 	) : this(
@@ -28,8 +27,7 @@ abstract class DialogPreferenceX(
 			context, R.attr.dialogPreferenceStyle,
 			android.R.attr.dialogPreferenceStyle
 		), 0
-	) {
-	}
+	)
 
-	abstract fun createDialogFragment(): DialogFragment?
+    abstract fun createDialogFragment(): DialogFragment?
 }
