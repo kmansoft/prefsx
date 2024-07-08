@@ -82,8 +82,6 @@ abstract class PreferenceActivityX
 			if (targetList != null) {
 				mTargetList.addAll(targetList)
 
-				rebuildLargeHeaderIcons()
-
 				mHeaderListAdapter.setHeaderList(mTargetList)
 			}
 
@@ -158,8 +156,8 @@ abstract class PreferenceActivityX
 		mIsLargeHeaderIcons = large
 	}
 
-	open fun getLargeHeaderIcon(iconRes: Int): Drawable? {
-		return ContextCompat.getDrawable(this, iconRes)
+	open fun getLargeHeaderIcon(header: Header): Drawable? {
+		return ContextCompat.getDrawable(this, header.iconRes)
 	}
 
 	class Header() : Parcelable {
@@ -168,7 +166,6 @@ abstract class PreferenceActivityX
 		var fragment: String? = null
 		var fragmentArguments: Bundle? = null
 		var intent: Intent? = null
-		var largeIcon: Drawable? = null
 		var itemId: Long = -1L
 
 		constructor(parcel: Parcel) : this() {
@@ -207,6 +204,26 @@ abstract class PreferenceActivityX
 
 	fun onIsMultiPane(): Boolean {
 		return mIsOnMultiPane
+	}
+
+	fun invalidateHeader(itemId: Long) {
+		for (i in 0 until mTargetList.size) {
+			val item = mTargetList.get(i)
+			if (item.itemId == itemId) {
+				mHeaderListAdapter.notifyItemChanged(i)
+				break
+			}
+		}
+	}
+
+	fun invalidateHeaderList(check: (header: Header) -> Boolean) {
+		for (i in 0 until mTargetList.size) {
+			val item = mTargetList.get(i)
+			if (check(item)) {
+				mHeaderListAdapter.notifyItemChanged(i)
+				break
+			}
+		}
 	}
 
 	fun invalidateHeaders() {
@@ -281,8 +298,6 @@ abstract class PreferenceActivityX
 		mTargetList.clear()
 		mTargetList.addAll(target)
 
-		rebuildLargeHeaderIcons()
-
 		mHeaderListAdapter.setHeaderList(mTargetList)
 
 		oldActivated?.fragment?.also {
@@ -303,16 +318,6 @@ abstract class PreferenceActivityX
 			val header = onGetNewHeader()
 			if (header != null) {
 				switchToFragment(header)
-			}
-		}
-	}
-
-	private fun rebuildLargeHeaderIcons() {
-		if (mIsLargeHeaderIcons) {
-			for (header in mTargetList) {
-				if (header.iconRes != 0) {
-					header.largeIcon = getLargeHeaderIcon(header.iconRes)
-				}
 			}
 		}
 	}
@@ -540,7 +545,8 @@ abstract class PreferenceActivityX
 			val item = list.get(position)
 			if (item.iconRes != 0) {
 				if (activity.mIsLargeHeaderIcons) {
-					holder.image.setImageDrawable(item.largeIcon)
+					val largeIcon = activity.getLargeHeaderIcon(item)
+					holder.image.setImageDrawable(largeIcon)
 				} else {
 					holder.image.setImageResource(item.iconRes)
 				}
