@@ -2,6 +2,7 @@ package org.kman.prefsx
 
 import android.content.Context
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.View
 import android.widget.TimePicker
 import androidx.preference.PreferenceDialogFragmentCompat
@@ -13,7 +14,10 @@ class TimePreferenceDialog : PreferenceDialogFragmentCompat() {
 		val preference: TimePreference = getTimePreference()
 		val value = preference.getValue()
 		val picker = TimePicker(context)
-		if (value == -1) {
+
+        picker.setIs24HourView(DateFormat.is24HourFormat(context))
+
+        if (value == -1) {
 			picker.currentHour = 0
 			picker.currentMinute = 0
 		} else {
@@ -22,6 +26,7 @@ class TimePreferenceDialog : PreferenceDialogFragmentCompat() {
 			picker.currentHour = hours
 			picker.currentMinute = minutes
 		}
+
 		mTimePicker = picker
 		return picker
 	}
