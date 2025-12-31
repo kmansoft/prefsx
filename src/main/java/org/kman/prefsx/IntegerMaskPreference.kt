@@ -7,8 +7,8 @@ import androidx.fragment.app.DialogFragment
 
 class IntegerMaskPreference(context: Context, attrs: AttributeSet)
 	: DialogPreferenceX(context, attrs) {
-	private var mValueList: IntArray
-	private var mEntryList: Array<CharSequence>
+	private var mValueList: IntArray? = null
+	private var mEntryList: Array<CharSequence>? = null
 	private var mValue = -1
 	private var mValueSet = false
 
@@ -16,8 +16,11 @@ class IntegerMaskPreference(context: Context, attrs: AttributeSet)
 		val res = context.resources
 		val a = context.obtainStyledAttributes(attrs, R.styleable.IntegerListPreference)
 		val valueListId = a.getResourceId(R.styleable.IntegerListPreference_valueList, 0)
-		mValueList = res.getIntArray(valueListId)
-		mEntryList = a.getTextArray(R.styleable.IntegerListPreference_entryList)
+        val entryListId = a.getResourceId(R.styleable.IntegerListPreference_entryList, 0)
+        if (valueListId != 0 && entryListId != 0) {
+            mValueList = res.getIntArray(valueListId)
+            mEntryList = res.getTextArray(entryListId)
+        }
 		a.recycle()
 	}
 
@@ -25,13 +28,23 @@ class IntegerMaskPreference(context: Context, attrs: AttributeSet)
 		return mValue
 	}
 
-	fun getEntries(): Array<CharSequence> {
+	fun getEntryList(): Array<CharSequence>? {
 		return mEntryList
 	}
 
-	fun getEntryValues(): IntArray {
+	fun getValueList(): IntArray? {
 		return mValueList
 	}
+
+    fun setEntryList(list: Array<CharSequence>) {
+        mEntryList = list
+        updateSummary()
+    }
+
+    fun setValueList(list: IntArray) {
+        mValueList = list
+        updateSummary()
+    }
 
 	fun setValue(value: Int) {
 		if (mValue != value || !mValueSet) {
@@ -61,16 +74,23 @@ class IntegerMaskPreference(context: Context, attrs: AttributeSet)
 		summary = if (mValue == 0) {
 			null
 		} else {
-			val sb = StringBuilder()
-			for (i in mValueList.indices) {
-				if ((mValue and mValueList[i]) != 0) {
-					if (sb.isNotEmpty()) {
-						sb.append(", ")
-					}
-					sb.append(mEntryList[i])
-				}
-			}
-			sb.toString()
+            val entryList = mEntryList
+            val valueList = mValueList
+
+            if (entryList != null && valueList != null) {
+                val sb = StringBuilder()
+                for (i in valueList.indices) {
+                    if ((mValue and valueList[i]) != 0) {
+                        if (sb.isNotEmpty()) {
+                            sb.append(", ")
+                        }
+                        sb.append(entryList[i])
+                    }
+                }
+                sb.toString()
+            } else {
+                null
+            }
 		}
 	}
 }
