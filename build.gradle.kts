@@ -2,11 +2,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id ("com.android.library")
-    id ("kotlin-android")
 }
 
 android {
-    compileSdk = 36
+    compileSdk = 37
 
     namespace = "org.kman.prefsx"
 
@@ -19,26 +18,20 @@ android {
         targetCompatibility (JavaVersion.VERSION_11)
     }
 
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles (getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles (getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }
 
 dependencies {
     // Support
-    implementation ("androidx.appcompat:appcompat:1.7.0")
-    implementation ("androidx.recyclerview:recyclerview:1.3.2")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
-    implementation ("androidx.collection:collection-ktx:1.4.0")
+    implementation ("androidx.appcompat:appcompat:1.8.0")
+    implementation ("androidx.recyclerview:recyclerview:1.4.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.11.0")
+    implementation ("androidx.collection:collection-ktx:1.6.0")
     implementation ("androidx.preference:preference-ktx:1.2.1")
 
     testImplementation ("junit:junit:4.13.2")
